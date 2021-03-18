@@ -145,128 +145,136 @@ namespace TestingControllersSampleNunit.Test
         }
         #endregion
 
-        //#region snippet_ForSessionActionResult_ReturnsNotFoundObjectResultForNonexistentSession
-        //[Fact]
-        //public async Task ForSessionActionResult_ReturnsNotFoundObjectResultForNonexistentSession()
-        //{
-        //    // Arrange
-        //    var mockRepo = new Mock<IBrainstormSessionRepository>();
-        //    var controller = new IdeasController(mockRepo.Object);
-        //    var nonExistentSessionId = 999;
+        #region snippet_ForSessionActionResult_ReturnsNotFoundObjectResultForNonexistentSession
+        [Test]
+        public async Task ForSessionActionResult_ReturnsNotFoundObjectResultForNonexistentSession()
+        {
+            // Arrange
+            var mockRepo = new Mock<IBrainstormSessionRepository>();
+            var controller = new IdeasController(mockRepo.Object);
+            var nonExistentSessionId = 999;
 
-        //    // Act
-        //    var result = await controller.ForSessionActionResult(nonExistentSessionId);
+            // Act
+            var result = await controller.ForSessionActionResult(nonExistentSessionId);
 
-        //    // Assert
-        //    var actionResult = Assert.IsType<ActionResult<List<IdeaDTO>>>(result);
-        //    Assert.IsType<NotFoundObjectResult>(actionResult.Result);
-        //}
-        //#endregion
+            // Assert
+            Assert.IsInstanceOf<ActionResult<List<IdeaDTO>>>(result);
+            var actionResult = result as ActionResult<List<IdeaDTO>>;
+            Assert.IsInstanceOf<NotFoundObjectResult>(actionResult.Result);
+        }
+        #endregion
 
-        //#region snippet_ForSessionActionResult_ReturnsIdeasForSession
-        //[Fact]
-        //public async Task ForSessionActionResult_ReturnsIdeasForSession()
-        //{
-        //    // Arrange
-        //    int testSessionId = 123;
-        //    var mockRepo = new Mock<IBrainstormSessionRepository>();
-        //    mockRepo.Setup(repo => repo.GetByIdAsync(testSessionId))
-        //        .ReturnsAsync(GetTestSession());
-        //    var controller = new IdeasController(mockRepo.Object);
+        #region snippet_ForSessionActionResult_ReturnsIdeasForSession
+        [Test]
+        public async Task ForSessionActionResult_ReturnsIdeasForSession()
+        {
+            // Arrange
+            int testSessionId = 123;
+            var mockRepo = new Mock<IBrainstormSessionRepository>();
+            mockRepo.Setup(repo => repo.GetByIdAsync(testSessionId))
+                .ReturnsAsync(GetTestSession());
+            var controller = new IdeasController(mockRepo.Object);
 
-        //    // Act
-        //    var result = await controller.ForSessionActionResult(testSessionId);
+            // Act
+            var result = await controller.ForSessionActionResult(testSessionId);
 
-        //    // Assert
-        //    var actionResult = Assert.IsType<ActionResult<List<IdeaDTO>>>(result);
-        //    var returnValue = Assert.IsType<List<IdeaDTO>>(actionResult.Value);
-        //    var idea = returnValue.FirstOrDefault();
-        //    Assert.Equal("One", idea.Name);
-        //}
-        //#endregion
+            // Assert
+            Assert.IsInstanceOf<ActionResult<List<IdeaDTO>>>(result);
+            var actionResult = result as ActionResult<List<IdeaDTO>>;
+            Assert.IsInstanceOf<List<IdeaDTO>>(actionResult.Value);
+            var returnValue = actionResult.Value as List<IdeaDTO>;
+            var idea = returnValue.FirstOrDefault();
+            Assert.AreEqual("One", idea.Name);
+        }
+        #endregion
 
-        //#region snippet_CreateActionResult_ReturnsBadRequest_GivenInvalidModel
-        //[Fact]
-        //public async Task CreateActionResult_ReturnsBadRequest_GivenInvalidModel()
-        //{
-        //    // Arrange & Act
-        //    var mockRepo = new Mock<IBrainstormSessionRepository>();
-        //    var controller = new IdeasController(mockRepo.Object);
-        //    controller.ModelState.AddModelError("error", "some error");
+        #region snippet_CreateActionResult_ReturnsBadRequest_GivenInvalidModel
+        [Test]
+        public async Task CreateActionResult_ReturnsBadRequest_GivenInvalidModel()
+        {
+            // Arrange & Act
+            var mockRepo = new Mock<IBrainstormSessionRepository>();
+            var controller = new IdeasController(mockRepo.Object);
+            controller.ModelState.AddModelError("error", "some error");
 
-        //    // Act
-        //    var result = await controller.CreateActionResult(model: null);
+            // Act
+            var result = await controller.CreateActionResult(model: null);
 
-        //    // Assert
-        //    var actionResult = Assert.IsType<ActionResult<BrainstormSession>>(result);
-        //    Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-        //}
-        //#endregion
+            // Assert
+            Assert.IsInstanceOf<ActionResult<BrainstormSession>>(result);
+            var actionResult = result as ActionResult<BrainstormSession>;
+            Assert.IsInstanceOf<BadRequestObjectResult>(actionResult.Result);
+        }
+        #endregion
 
-        //#region snippet_CreateActionResult_ReturnsNotFoundObjectResultForNonexistentSession
-        //[Fact]
-        //public async Task CreateActionResult_ReturnsNotFoundObjectResultForNonexistentSession()
-        //{
-        //    // Arrange
-        //    var nonExistentSessionId = 999;
-        //    string testName = "test name";
-        //    string testDescription = "test description";
-        //    var mockRepo = new Mock<IBrainstormSessionRepository>();
-        //    var controller = new IdeasController(mockRepo.Object);
+        #region snippet_CreateActionResult_ReturnsNotFoundObjectResultForNonexistentSession
+        [Test]
+        public async Task CreateActionResult_ReturnsNotFoundObjectResultForNonexistentSession()
+        {
+            // Arrange
+            var nonExistentSessionId = 999;
+            string testName = "test name";
+            string testDescription = "test description";
+            var mockRepo = new Mock<IBrainstormSessionRepository>();
+            var controller = new IdeasController(mockRepo.Object);
 
-        //    var newIdea = new NewIdeaModel()
-        //    {
-        //        Description = testDescription,
-        //        Name = testName,
-        //        SessionId = nonExistentSessionId
-        //    };
+            var newIdea = new NewIdeaModel()
+            {
+                Description = testDescription,
+                Name = testName,
+                SessionId = nonExistentSessionId
+            };
 
-        //    // Act
-        //    var result = await controller.CreateActionResult(newIdea);
+            // Act
+            var result = await controller.CreateActionResult(newIdea);
 
-        //    // Assert
-        //    var actionResult = Assert.IsType<ActionResult<BrainstormSession>>(result);
-        //    Assert.IsType<NotFoundObjectResult>(actionResult.Result);
-        //}
-        //#endregion
+            // Assert
+            Assert.IsInstanceOf<ActionResult<BrainstormSession>>(result);
+            var actionResult = result as ActionResult<BrainstormSession>;
+            Assert.IsInstanceOf<NotFoundObjectResult>(actionResult.Result);
+        }
+        #endregion
 
-        //#region snippet_CreateActionResult_ReturnsNewlyCreatedIdeaForSession
-        //[Fact]
-        //public async Task CreateActionResult_ReturnsNewlyCreatedIdeaForSession()
-        //{
-        //    // Arrange
-        //    int testSessionId = 123;
-        //    string testName = "test name";
-        //    string testDescription = "test description";
-        //    var testSession = GetTestSession();
-        //    var mockRepo = new Mock<IBrainstormSessionRepository>();
-        //    mockRepo.Setup(repo => repo.GetByIdAsync(testSessionId))
-        //        .ReturnsAsync(testSession);
-        //    var controller = new IdeasController(mockRepo.Object);
+        #region snippet_CreateActionResult_ReturnsNewlyCreatedIdeaForSession
+        [Test]
+        public async Task CreateActionResult_ReturnsNewlyCreatedIdeaForSession()
+        {
+            // Arrange
+            int testSessionId = 123;
+            string testName = "test name";
+            string testDescription = "test description";
+            var testSession = GetTestSession();
+            var mockRepo = new Mock<IBrainstormSessionRepository>();
+            mockRepo.Setup(repo => repo.GetByIdAsync(testSessionId))
+                .ReturnsAsync(testSession);
+            var controller = new IdeasController(mockRepo.Object);
 
-        //    var newIdea = new NewIdeaModel()
-        //    {
-        //        Description = testDescription,
-        //        Name = testName,
-        //        SessionId = testSessionId
-        //    };
-        //    mockRepo.Setup(repo => repo.UpdateAsync(testSession))
-        //        .Returns(Task.CompletedTask)
-        //        .Verifiable();
+            var newIdea = new NewIdeaModel()
+            {
+                Description = testDescription,
+                Name = testName,
+                SessionId = testSessionId
+            };
+            mockRepo.Setup(repo => repo.UpdateAsync(testSession))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
 
-        //    // Act
-        //    var result = await controller.CreateActionResult(newIdea);
+            // Act
+            var result = await controller.CreateActionResult(newIdea);
 
-        //    // Assert
-        //    var actionResult = Assert.IsType<ActionResult<BrainstormSession>>(result);
-        //    var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(actionResult.Result);
-        //    var returnValue = Assert.IsType<BrainstormSession>(createdAtActionResult.Value);
-        //    mockRepo.Verify();
-        //    Assert.Equal(2, returnValue.Ideas.Count());
-        //    Assert.Equal(testName, returnValue.Ideas.LastOrDefault().Name);
-        //    Assert.Equal(testDescription, returnValue.Ideas.LastOrDefault().Description);
-        //}
-        //#endregion
+            // Assert
+            Assert.IsInstanceOf<ActionResult<BrainstormSession>>(result);
+            var actionResult = result as ActionResult<BrainstormSession>;
+            Assert.IsInstanceOf<CreatedAtActionResult>(actionResult.Result);
+            var createdAtActionResult = actionResult.Result as CreatedAtActionResult;
+            Assert.IsInstanceOf<BrainstormSession>(createdAtActionResult.Value);
+            var returnValue = createdAtActionResult.Value as BrainstormSession;
+            mockRepo.Verify();
+            Assert.AreEqual(2, returnValue.Ideas.Count());
+            Assert.AreEqual(testName, returnValue.Ideas.LastOrDefault().Name);
+            Assert.AreEqual(testDescription, returnValue.Ideas.LastOrDefault().Description);
+        }
+        #endregion
 
         private BrainstormSession GetTestSession()
         {
